@@ -91,3 +91,30 @@ Challenge_1b/
 ---
 
 **Note**: This README provides a brief overview of the Challenge 1b solution structure based on available sample data. 
+
+
+
+
+
+# Challenge 1B Solution
+
+## How to Run
+
+### 1. Install Dependencies
+```
+pip install -r requirements.txt
+```
+
+### 2. Build the Docker Image
+```
+docker build --platform linux/amd64 -t mychallenge:1b .
+```
+
+### 3. Run the Container
+```
+docker run --rm -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output --network none mychallenge:1b
+```
+
+### Directory Structure
+- **Input**: Place `challenge1b_input.json` and PDFs in the `input/` directory.
+- **Output**: Output will be saved to `output/challenge1b_output.json`.

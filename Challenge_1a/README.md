@@ -127,3 +127,53 @@ docker run --rm -v $(pwd)/sample_dataset/pdfs:/app/input:ro -v $(pwd)/sample_dat
 ---
 
 **Important**: This is a sample implementation. Participants should develop their own solutions that meet all the official challenge requirements and constraints. 
+
+
+
+
+# Adobe Hackathon - Challenge 1A: PDF Outline Extraction
+
+## Approach
+This solution extracts structured outlines (title and headings H1, H2, H3) from PDFs using a machine learning approach:
+- **Text Extraction**: PyMuPDF (fitz) extracts text lines with font size, boldness, italics, and position.
+- **Heading Detection**: A Random Forest classifier, trained on the sample dataset, predicts whether a text line is a title, H1, H2, H3, or none, based on features like font size, style, and position.
+- **Output**: Generates a JSON file per PDF with the title and a list of headings, adhering to the specified format.
+- **Docker**: The solution is containerized for AMD64, runs offline, and processes 50-page PDFs in under 10 seconds with a model size under 200MB.
+
+## Models and Libraries Used
+- **PyMuPDF**: For fast and accurate PDF text extraction.
+- **Scikit-learn**: RandomForestClassifier for heading detection, LabelEncoder for label encoding.
+- **Pandas**: Data manipulation for feature preparation.
+- **Joblib**: Model serialization.
+- **Trained Model**: `heading_classifier.pkl` (classifier) and `label_encoder.pkl` (label encoder), generated from `train_model.py`.
+
+## How to Build and Run
+### Local Training (Before Submission)
+1. Install Python 3.9 and dependencies:
+   ```
+   pip install pymupdf scikit-learn pandas joblib
+   ```
+2. Run the training script:
+   ```
+   cd Challenge_1a
+   python train_model.py
+   ```
+   This generates `heading_classifier.pkl` and `label_encoder.pkl`.
+
+### Docker Execution (Evaluation)
+The solution is designed to run as per the hackathon’s expected execution:
+1. Build the Docker image:
+   ```
+   docker build --platform linux/amd64 -t mysolutionname:somerandomidentifier .
+   ```
+2. Run the container:
+   ```
+   docker run --rm -v $(pwd)/input:/app/input -v $(pwd)/output:/app/output --network none mysolutionname:somerandomidentifier
+   ```
+- **Input**: PDFs in `/app/input`.
+- **Output**: Corresponding `.json` files in `/app/output`.
+
+## Notes
+- The model is trained on the provided sample dataset (`file01.pdf` to `file05.pdf` and their JSONs).
+- It supports multilingual PDFs with extractable text (e.g., Japanese), aiming for bonus points.
+- Tested to meet constraints: <10s for 50 pages, <200MB model size, CPU-only, offline.
