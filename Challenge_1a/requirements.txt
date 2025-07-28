@@ -1,0 +1,4 @@
+pymupdf
+scikit-learn
+pandas
+joblib
